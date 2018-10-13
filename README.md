@@ -1,2 +1,3 @@
-# netty-learn
-netty入门与实战
+**netty学习-摘自掘金小册**   
+1、netty客户端与服务端双向通信  
+
