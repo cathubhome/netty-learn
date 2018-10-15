@@ -24,7 +24,6 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
     protected void channelRead0(ChannelHandlerContext channelHandlerContext, LoginResponsePacket loginResponsePacket) throws Exception {
         if (loginResponsePacket.isSuccess()) {
             log.debug("{}: 客户端登录成功", new Date());
-            //客户端登录成功后，给客户端绑定登录成功的标志位
             LoginUtil.markAsLogin(channelHandlerContext.channel());
         } else {
             log.debug("{}: 客户端登录失败，原因：{}", new Date(), loginResponsePacket.getReason());
@@ -44,5 +43,11 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         //写数据
         ctx.channel().writeAndFlush(loginRequestPacket);
 
+    }
+
+
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+        log.warn("{} oh my god，客户端连接关闭",new Date());
     }
 }

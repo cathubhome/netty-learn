@@ -49,6 +49,8 @@ public class NettyServer {
                                 .addLast(new Spliter())
                                 .addLast(new PacketDecoder())
                                 .addLast(new LoginRequestHandler())
+                                //身份认证
+                                .addLast(new AuthHandler())
                                 .addLast(new MessageRequestHandler())
                                 .addLast(new PacketEncoder())
                         ;
