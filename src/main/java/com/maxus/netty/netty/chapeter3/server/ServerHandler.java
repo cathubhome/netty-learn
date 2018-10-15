@@ -20,6 +20,7 @@ import java.util.Date;
  * Time:Create on 2018/10/14 16:40
  */
 @Slf4j
+@SuppressWarnings("all")
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override

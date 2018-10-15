@@ -21,6 +21,7 @@ import java.util.UUID;
  * Time:Create on 2018/10/14 15:56
  */
 @Slf4j
+@SuppressWarnings("all")
 public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
@@ -37,7 +38,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         ByteBuf encode = PacketCodeC.INSTANCE.encode(ctx.alloc(), loginRequestPacket);
 
         //写数据
-        ctx.writeAndFlush(encode);
+        ctx.channel().writeAndFlush(encode);
 
 
     }

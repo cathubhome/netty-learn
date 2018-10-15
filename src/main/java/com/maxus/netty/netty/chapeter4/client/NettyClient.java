@@ -1,6 +1,13 @@
-package com.maxus.netty.netty.chapter1;
+package com.maxus.netty.netty.chapeter4.client;
 
+import com.maxus.netty.netty.chapeter4.codec.PacketDecoder;
+import com.maxus.netty.netty.chapeter4.codec.PacketEncoder;
+import com.maxus.netty.netty.chapeter4.codec.Spliter;
+import com.maxus.netty.netty.chapeter4.protocol.request.MessageRequestPacket;
+import com.maxus.netty.netty.chapeter4.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -9,6 +16,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -43,12 +51,18 @@ public class NettyClient {
                         //连接数据逻辑处理
                         //ch.pipeline() 返回的是和这条连接相关的逻辑处理链，采用了责任链模式
                         ch.pipeline()
-                                //调用addLast()方法添加逻辑处理器，这个逻辑处理器为的就是在客户端建立连接成功之后，向服务端写数据
-                                .addLast(new FirstClientHandler());
+                                //调用addLast()方法添加处理器
+
+                                //拆包器
+                                .addLast(new Spliter())
+                                //解码器
+                                .addLast(new PacketDecoder())
+                                .addLast(new LoginResponseHandler())
+                                .addLast(new MessageResponseHandler())
+                                //编码器
+                                .addLast(new PacketEncoder());
                     }
                 })
-                //连接的超时时间，超过这个时间还是建立不上的话则代表连接失败
-//                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS,3000)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
 
@@ -71,6 +85,9 @@ public class NettyClient {
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
                 log.info("connect netty server success");
+                Channel channel = ((ChannelFuture) future).channel();
+                // 连接成功之后，启动控制台线程
+                startConsoleThread(channel);
             } else if (retry == 0) {
                 log.debug("maxRetries have been reached,give up connect");
             } else {
@@ -84,5 +101,22 @@ public class NettyClient {
                         .SECONDS);
             }
         });
+    }
+
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                // channel 是登录状态时允许控制台输入消息
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("输入消息发送至服务端: ");
+                    Scanner sc = new Scanner(System.in);
+                    String line = sc.nextLine();
+
+                    MessageRequestPacket packet = new MessageRequestPacket();
+                    packet.setMessage(line);
+                    channel.writeAndFlush(packet);
+                }
+            }
+        }).start();
     }
 }
