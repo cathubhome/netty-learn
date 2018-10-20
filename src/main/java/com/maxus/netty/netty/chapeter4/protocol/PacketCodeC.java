@@ -1,8 +1,10 @@
 package com.maxus.netty.netty.chapeter4.protocol;
 
 import com.maxus.netty.netty.chapeter4.protocol.command.Command;
+import com.maxus.netty.netty.chapeter4.protocol.request.HeartBeatRequestPacket;
 import com.maxus.netty.netty.chapeter4.protocol.request.LoginRequestPacket;
 import com.maxus.netty.netty.chapeter4.protocol.request.MessageRequestPacket;
+import com.maxus.netty.netty.chapeter4.protocol.response.HeartBeatResponsePacket;
 import com.maxus.netty.netty.chapeter4.protocol.response.LoginResponsePacket;
 import com.maxus.netty.netty.chapeter4.protocol.response.MessageResponsePacket;
 import com.maxus.netty.netty.chapeter4.serialize.Serializer;
@@ -40,12 +42,13 @@ public class PacketCodeC {
         packetTypeMap.put(Command.LOGIN_RESPONSE, LoginResponsePacket.class);
         packetTypeMap.put(Command.MESSAGE_REQUEST, MessageRequestPacket.class);
         packetTypeMap.put(Command.MESSAGE_RESPONSE, MessageResponsePacket.class);
+        packetTypeMap.put(Command.HEART_BEAT_REQUEST, HeartBeatRequestPacket.class);
+        packetTypeMap.put(Command.HEART_BEAT_RESPONSE, HeartBeatResponsePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         serializerMap.put(serializer.getSerializerAlgorithm(), serializer);
     }
-
 
     public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
 

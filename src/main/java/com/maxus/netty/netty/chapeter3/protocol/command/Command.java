@@ -27,4 +27,5 @@ public interface Command {
      * 消息响应指令
      */
     Byte MESSAGE_RESPONSE = 4;
+
 }

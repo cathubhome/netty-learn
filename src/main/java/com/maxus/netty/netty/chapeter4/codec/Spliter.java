@@ -24,7 +24,7 @@ public class Spliter extends LengthFieldBasedFrameDecoder{
     private static final int LENGTH_FIELD_LENGTH = 4;
 
     public Spliter(){
-        //参数Integer.MAX_VALUE是数据包的长度
+        //参数Integer.MAX_VALUE是数据包的长度，参数依次表示：参数1：数据包的最大长度、参数2：长度域的偏移量、参数3：长度域的长度
         super(Integer.MAX_VALUE, LENGTH_FIELD_OFFSET, LENGTH_FIELD_LENGTH);
     }
 

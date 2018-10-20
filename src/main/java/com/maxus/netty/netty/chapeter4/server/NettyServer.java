@@ -3,6 +3,7 @@ package com.maxus.netty.netty.chapeter4.server;
 import com.maxus.netty.netty.chapeter4.codec.PacketDecoder;
 import com.maxus.netty.netty.chapeter4.codec.PacketEncoder;
 import com.maxus.netty.netty.chapeter4.codec.Spliter;
+import com.maxus.netty.netty.chapeter4.handler.IMIdleStateHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -45,13 +46,21 @@ public class NettyServer {
                         log.info("deal with netty connection....... ");
                         //连接数据读写逻辑
                         ch.pipeline()
-                                //拆包器，参数1：数据包的最大长度、参数2：长度域的偏移量、参数3：长度域的长度
+                                //空闲检查处理器，这里空闲检查处理器置顶？如果不置顶，在连接读到数据后，可能会由于inbound传播出错而不能向后传递，最终IMIdleStateHandler就不能读到数据，就导致误判
+                                .addLast(new IMIdleStateHandler())
+                                //拆包处理器
                                 .addLast(new Spliter())
+                                //解码处理器
                                 .addLast(new PacketDecoder())
+                                //登录处理器
                                 .addLast(new LoginRequestHandler())
-                                //身份认证
+                                //接收客户端心跳包并响应的处理器
+                                .addLast(new HeartBeatRequestHandler())
+                                //身份认证处理器
                                 .addLast(new AuthHandler())
+                                //消息处理器
                                 .addLast(new MessageRequestHandler())
+                                //编码处理器
                                 .addLast(new PacketEncoder())
                         ;
 

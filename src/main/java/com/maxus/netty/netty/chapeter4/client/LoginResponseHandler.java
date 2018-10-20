@@ -43,7 +43,10 @@ public class LoginResponseHandler extends SimpleChannelInboundHandler<LoginRespo
         //写数据
         ctx.channel().writeAndFlush(loginRequestPacket);
 
+
     }
+
+
 
 
     @Override

@@ -20,6 +20,7 @@ import java.util.Map;
  * Description: 编码与解码
  * Time:Create on 2018/10/14 10:06
  */
+@SuppressWarnings("all")
 public class PacketCodeC {
 
     /**

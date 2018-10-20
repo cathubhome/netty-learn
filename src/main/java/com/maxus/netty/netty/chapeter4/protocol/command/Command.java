@@ -27,4 +27,14 @@ public interface Command {
      * 消息响应指令
      */
     Byte MESSAGE_RESPONSE = 4;
+
+    /**
+     * 心跳请求指令
+     */
+    Byte HEART_BEAT_REQUEST = 5;
+
+    /**
+     * 心跳响应指令
+     */
+    Byte HEART_BEAT_RESPONSE = 6;
 }

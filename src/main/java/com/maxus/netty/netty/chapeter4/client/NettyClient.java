@@ -51,16 +51,23 @@ public class NettyClient {
                         //连接数据逻辑处理
                         //ch.pipeline() 返回的是和这条连接相关的逻辑处理链，采用了责任链模式
                         ch.pipeline()
-                                //调用addLast()方法添加处理器
-
-                                //拆包器
+                                //空闲检测处理器
+                                //.addLast(new IMIdleStateHandler())
+                                //拆包处理器
                                 .addLast(new Spliter())
-                                //解码器
+                                //解码处理器
                                 .addLast(new PacketDecoder())
+                                //登录响应处理器
                                 .addLast(new LoginResponseHandler())
+                                //消息响应处理器
                                 .addLast(new MessageResponseHandler())
-                                //编码器
-                                .addLast(new PacketEncoder());
+                                //编码处理器
+                                .addLast(new PacketEncoder())
+                                //心跳定时器
+                                .addLast(new HeartBeatTimerHandler())
+
+                        ;
+
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
