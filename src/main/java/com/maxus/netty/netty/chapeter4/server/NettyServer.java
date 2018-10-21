@@ -1,5 +1,6 @@
 package com.maxus.netty.netty.chapeter4.server;
 
+import com.maxus.netty.netty.chapeter4.client.HeartBeatTimerHandler;
 import com.maxus.netty.netty.chapeter4.codec.PacketDecoder;
 import com.maxus.netty.netty.chapeter4.codec.PacketEncoder;
 import com.maxus.netty.netty.chapeter4.codec.Spliter;
@@ -62,6 +63,8 @@ public class NettyServer {
                                 .addLast(new MessageRequestHandler())
                                 //编码处理器
                                 .addLast(new PacketEncoder())
+                                //心跳
+                                .addLast(new HeartBeatTimerHandler())
                         ;
 
 

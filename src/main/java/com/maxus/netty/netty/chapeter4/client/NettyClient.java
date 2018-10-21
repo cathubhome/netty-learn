@@ -3,6 +3,8 @@ package com.maxus.netty.netty.chapeter4.client;
 import com.maxus.netty.netty.chapeter4.codec.PacketDecoder;
 import com.maxus.netty.netty.chapeter4.codec.PacketEncoder;
 import com.maxus.netty.netty.chapeter4.codec.Spliter;
+import com.maxus.netty.netty.chapeter4.handler.IMIdleStateHandler;
+import com.maxus.netty.netty.chapeter4.protocol.request.LoginRequestPacket;
 import com.maxus.netty.netty.chapeter4.protocol.request.MessageRequestPacket;
 import com.maxus.netty.netty.chapeter4.util.LoginUtil;
 import io.netty.bootstrap.Bootstrap;
@@ -17,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,7 +55,7 @@ public class NettyClient {
                         //ch.pipeline() 返回的是和这条连接相关的逻辑处理链，采用了责任链模式
                         ch.pipeline()
                                 //空闲检测处理器
-                                //.addLast(new IMIdleStateHandler())
+                                .addLast(new IMIdleStateHandler())
                                 //拆包处理器
                                 .addLast(new Spliter())
                                 //解码处理器
@@ -65,7 +68,6 @@ public class NettyClient {
                                 .addLast(new PacketEncoder())
                                 //心跳定时器
                                 .addLast(new HeartBeatTimerHandler())
-
                         ;
 
                     }
@@ -111,6 +113,13 @@ public class NettyClient {
     }
 
     private static void startConsoleThread(Channel channel) {
+        //创建登录对象
+        LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+        loginRequestPacket.setUserId(UUID.randomUUID().toString());
+        loginRequestPacket.setUsername("cat");
+        loginRequestPacket.setPassword("cathome");
+        channel.writeAndFlush(loginRequestPacket);
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 // channel 是登录状态时允许控制台输入消息
