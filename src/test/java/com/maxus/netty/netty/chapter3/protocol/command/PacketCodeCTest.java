@@ -1,10 +1,10 @@
 package com.maxus.netty.netty.chapter3.protocol.command;
 
-import com.maxus.netty.netty.chapeter3.protocol.Packet;
-import com.maxus.netty.netty.chapeter3.protocol.PacketCodeC;
-import com.maxus.netty.netty.chapeter3.protocol.request.LoginRequestPacket;
-import com.maxus.netty.netty.chapeter3.serialize.Serializer;
-import com.maxus.netty.netty.chapeter3.serialize.impl.JSONSerializer;
+import com.maxus.netty.netty.chapter3.protocol.Packet;
+import com.maxus.netty.netty.chapter3.protocol.PacketCodeC;
+import com.maxus.netty.netty.chapter3.protocol.request.LoginRequestPacket;
+import com.maxus.netty.netty.chapter3.serialize.Serializer;
+import com.maxus.netty.netty.chapter3.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import lombok.extern.slf4j.Slf4j;

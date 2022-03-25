@@ -1,4 +1,4 @@
-package com.maxus.netty.netty.chapter1;
+package com.maxus.netty.netty.chapter3.server;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelInitializer;
@@ -6,6 +6,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.concurrent.Future;
+import io.netty.util.concurrent.GenericFutureListener;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -15,20 +17,21 @@ import lombok.extern.slf4j.Slf4j;
  * Time:Create on 2018/10/9 9:35
  */
 @Slf4j
+@SuppressWarnings("all")
 public class NettyServer {
 
     public static void main(String[] args) {
         //监听端口、accept新连接的线程组
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         //处理每一条连接的数据读写的线程组
-        NioEventLoopGroup workGroup =  new NioEventLoopGroup();
+        NioEventLoopGroup workgroup =  new NioEventLoopGroup();
 
         //ServerBootstrap是引导类，引导服务器端的启动工作
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 
         serverBootstrap
                 //配置两大线程组
-                .group(bossGroup,workGroup)
+                .group(bossGroup,workgroup)
                 //指定服务器端的IO模型，NIO模型： BIO模型：NioServerSocketChannel ; OioServerSocketChannel
                 .channel(NioServerSocketChannel.class)
                 //调用childHandler()方法，给这个ServerBootstrap引导类创建一个ChannelInitializer，这里主要就是定义后续每条连接的数据读写，业务处理逻辑
@@ -38,7 +41,7 @@ public class NettyServer {
                     protected void initChannel(NioSocketChannel ch) throws Exception {
                         log.info("deal with netty connection....... ");
                         //连接数据读写逻辑
-                        ch.pipeline().addLast(new FirstServerHandler());
+                        ch.pipeline().addLast(new ServerHandler());
 
                     }
                 })
@@ -60,11 +63,14 @@ public class NettyServer {
         ;
         //绑定端口，该方法是异步方法，返回ChannelFuture
         //ChannelFuture可以添加一个监听器GenericFutureListener，然后我们在GenericFutureListener的operationComplete方法里面，我们可以监听端口是否绑定成功
-        serverBootstrap.bind(8000).addListener(future -> {
-            if (future.isSuccess()){
-                log.info("netty server bind port success");
-            }else{
-                log.error("netty server bind port failure");
+        serverBootstrap.bind(8000).addListener(new GenericFutureListener<Future<? super Void>>() {
+            @Override
+            public void operationComplete(Future<? super Void> future) throws Exception {
+                if (future.isSuccess()){
+                    log.info("netty server bind port success");
+                }else{
+                    log.error("netty server bind port failure");
+                }
             }
         });
     }
