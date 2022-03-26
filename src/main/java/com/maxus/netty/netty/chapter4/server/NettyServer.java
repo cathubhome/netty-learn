@@ -92,9 +92,9 @@ public class NettyServer {
         serverBootstrap.bind(8000).addListener(new GenericFutureListener<Future<? super Void>>() {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
-                if (future.isSuccess()){
+                if (future.isSuccess()) {
                     log.info("netty server bind port success");
-                }else{
+                } else {
                     log.error("netty server bind port failure");
                 }
             }
