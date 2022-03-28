@@ -14,8 +14,10 @@ class ByteBufTest {
 
     public static void main(String[] args) {
 
+        //第一个参数指定容量（默认是256个字节），第二个参数指定最大容量（默认是2G）
         ByteBuf buffer = ByteBufAllocator.DEFAULT.buffer(9, 100);
-
+        boolean direct = buffer.isDirect();
+        System.out.println("buffer is direct ? " + (direct ? "Y" : "N"));
         print("allocate ByteBuf(9, 100)", buffer);
 
         // write 方法改变写指针，写完之后写指针未到 capacity 的时候，buffer 仍然可写

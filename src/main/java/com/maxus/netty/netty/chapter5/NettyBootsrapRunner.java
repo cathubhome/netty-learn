@@ -1,6 +1,5 @@
 package com.maxus.netty.netty.chapter5;
 
-import com.maxus.netty.netty.chapter4.client.HeartBeatTimerHandler;
 import com.maxus.netty.netty.chapter4.codec.PacketDecoder;
 import com.maxus.netty.netty.chapter4.codec.PacketEncoder;
 import com.maxus.netty.netty.chapter4.codec.Spliter;
@@ -46,6 +45,8 @@ public class NettyBootsrapRunner implements ApplicationRunner, ApplicationListen
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
+
+        //NioEventLoopGroup的本质就是死循环，不停地检测IO事件，处理IO事件，执行任务
         //监听端口、accept新连接的线程组
         NioEventLoopGroup bossGroup = new NioEventLoopGroup();
         //处理每一条连接的数据读写的线程组
@@ -85,8 +86,6 @@ public class NettyBootsrapRunner implements ApplicationRunner, ApplicationListen
                                     .addLast(new MessageRequestHandler())
                                     //编码处理器
                                     .addLast(new PacketEncoder())
-                                    //心跳
-                                    .addLast(new HeartBeatTimerHandler())
                             ;
 
 

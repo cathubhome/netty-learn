@@ -31,11 +31,16 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         } else {
             loginResponsePacket.setReason("账号密码校验失败");
             loginResponsePacket.setSuccess(false);
-            System.out.println(new Date() + ": 登录失败!");
+            log.warn(new Date() + ": 登录失败!");
         }
         channelHandlerContext.channel().writeAndFlush(loginResponsePacket);
     }
 
+    /**
+     * 验证身份
+     * @param loginRequestPacket
+     * @return
+     */
     private boolean valid(LoginRequestPacket loginRequestPacket) {
         return true;
     }

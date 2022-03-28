@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 /**
  * Created with IDEA
  * Author:catHome
- * Description: 拆包器
+ * Description: 基于长度域拆包器
  * Time:Create on 2018/10/15 16:00
  */
 @Slf4j
